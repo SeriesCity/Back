@@ -1,4 +1,4 @@
-package enities
+package entities
 
 type Serial struct {
 	FilmBase

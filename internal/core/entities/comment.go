@@ -1,4 +1,4 @@
-package enities
+package entities
 
 type Comment struct {
 	Owner      User      `gorm:""` // user id
