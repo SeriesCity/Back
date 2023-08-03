@@ -1,11 +1,14 @@
 package entities
 
 type Comment struct {
-	Owner      User      `gorm:""` // user id
-	Content    string    `gorm:""`
-	IsAccepted bool      `gorm:""`
-	IsSpoiler  bool      `gorm:""`
-	Likes      []User    `gorm:""`
-	Dislikes   []User    `gorm:""`
-	Parent     []Comment `gorm:""`
+	BaseModel
+	OwnerID    uint
+	Owner      User `gorm:"foreignKey:OwnerID"`
+	ParentID   uint
+	Children   []Comment `gorm:"foreignKey:ParentID"`
+	Content    string
+	IsAccepted bool
+	IsSpoiler  bool
+	Likes      []User `gorm:"many2many:comment_likes;" json:"likes"`
+	Dislikes   []User `gorm:"many2many:comment_dislikes;" json:"dislikes"`
 }

@@ -26,65 +26,66 @@ const (
 )
 
 type FilmBase struct {
-	Slug          string     `gorm:"uniqueIndex"`
-	Title         string     `gorm:""`
-	Category      []string   `gorm:""`
-	PublishYear   *time.Time `gorm:""`
-	IMDB          IMDB       `gorm:""`
-	Comments      []Comment  `gorm:""`
-	Quality       string     `gorm:""`
-	Duration      int32      `gorm:""`
-	PermissionAge string     `gorm:""` // enum
-	Genres        []string   `gorm:""`
-	Streamer      string     `gorm:""`
-	Directors     []string   `gorm:""`
-	Writers       []string   `gorm:""`
-	Actors        []Actor    `gorm:""`
-	Description   string     `gorm:""`
-	Rates         []Rate     `gorm:""`
-	Scores        int16      `gorm:""`
-	Thumbnail     Photo      `gorm:""`
-	Cover         Photo      `gorm:""`
-	Trailer       Video      `gorm:""`
-	Tags          []string   `gorm:""`
-}
-
-type Session struct {
-	Number   int8           `gorm:""`
-	Episodes []DownloadLink `gorm:""`
+	BaseModel
+	Slug          string `gorm:"uniqueIndex"`
+	Title         string
+	Category      []Category `gorm:"many2many:movie_categories;" json:"genres"`
+	PublishYear   time.Time
+	Imdb          IMDB      `gorm:"embedded"`
+	Comments      []Comment `gorm:"many2many:comments;" json:"comments"`
+	Quality       string
+	Duration      int32
+	PermissionAge string
+	Streamer      string
+	Directors     []string `gorm:"type:text[]"`
+	Writers       []string `gorm:"type:text[]"`
+	Actors        []Actor  `gorm:"many2many:film_actors;" json:"actors"`
+	Description   string
+	Rates         []Rate `gorm:"many2many:film_rates;" json:"rates"`
+	Scores        int16
+	Thumbnail     Photo    `gorm:"embedded"`
+	Cover         Photo    `gorm:"embedded"`
+	Trailer       Video    `gorm:"embedded"`
+	Tags          []string `gorm:"type:text[]"`
 }
 
 type IMDB struct {
-	Link  string  `gorm:""`
-	Rate  float32 `gorm:""`
-	Votes int64   `gorm:""`
+	Link  string
+	Rate  float32
+	Votes int64
 }
 
 type ActorPerson struct {
-	FirstName   string `gorm:""`
-	LastName    string `gorm:""`
-	DateOfBirth string `gorm:""`
-	Photo       Photo  `gorm:""`
-	Profession  string `gorm:""`
+	BaseModel
+	FirstName   string
+	LastName    string
+	DateOfBirth string
+	Photo       Photo `gorm:"embedded"`
+	Profession  string
 }
 
 type Actor struct {
-	Person      ActorPerson `gorm:""`
-	NameInMovie string      `gorm:""`
+	BaseModel
+	PersonID    uint
+	Person      ActorPerson `gorm:"foreignKey:PersonID"`
+	NameInMovie string
 }
 
 type Rate struct {
-	Owner User `gorm:""`
-	Score int8 `gorm:""`
+	BaseModel
+	OwnerID uint
+	Owner   User `gorm:"foreignKey:OwnerID"`
+	Score   int8 `gorm:"default:0"`
 }
 
 type DownloadLink struct {
-	Format        string `gorm:""`
-	Volume        string `gorm:""`
-	SampleQuality Photo  `gorm:"embedded;embeddedPrefix:sample_"`
-	Link          string `gorm:""`
-	Quality       string `gorm:""`
-	Encode        string `gorm:""`
+	BaseModel
+	Episode       uint  `gorm:"default:0"`
+	Video         Video `gorm:"embedded"`
+	Volume        string
+	SampleQuality Photo `gorm:"embedded"`
+	Quality       string
+	Encode        string
 	IsSoftSub     string `gorm:"default:false;"`
 	IsDouble      bool   `gorm:"default:false;"`
 	VIP           bool   `gorm:"default:false;"`

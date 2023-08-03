@@ -3,12 +3,12 @@ package entities
 import "time"
 
 type Photo struct {
-	Link   string      `gorm:""`
-	Format PhotoFormat `gorm:""` // enum
+	Link   string
+	Format PhotoFormat
 }
 
 type Video struct {
-	Link     string         `gorm:""`
-	Duration *time.Duration `gorm:""`
+	Link     string
+	Duration *time.Duration
 	Format   VideoFormat
 }

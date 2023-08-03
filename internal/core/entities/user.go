@@ -1,32 +1,36 @@
 package entities
 
-import "time"
+import (
+	"time"
+)
 
 type UserPermission int16
 
 const (
-	RegularUser UserPermission = iota
+	RegularUser UserPermission = iota + 1
 	VIPUser
 	SuperUser
 	Admin
 )
 
 type User struct {
-	FirstName      string
-	LastName       string
-	PhoneNumber    string
-	Username       string
-	Email          string `gorm:""`
-	Password       string
-	Collections    []Collection
-	Permission     UserPermission `gorm:""`
-	PermissionDate time.Time
+	BaseModel
+	FirstName      string    `gorm:"type:character" json:"first_name"`
+	LastName       string    `gorm:"type:character" json:"last_name"`
+	Username       string    `gorm:"type:character;not null" json:"username"`
+	Email          string    `gorm:"type:character;uniqueIndex;not null" json:"email"`
+	Phone          string    `gorm:"type:character" json:"phone"`
+	Password       []string  `gorm:"type:text[]" json:"password"`
+	Permission     int       `json:"permission"`
+	PermissionDate time.Time `gorm:"Column:permission_date"`
 }
 
 type Collection struct {
+	BaseModel
 	Name      string
-	OwnerID   User
-	Movies    []Movie
-	Serials   []Serial
+	Movies    []Movie  `gorm:"many2many:collection_movies;" json:"movies"`
+	Serials   []Serial `gorm:"many2many:collection_serials;" json:"serials"`
+	OwnerID   uint
+	Owner     User `gorm:"foreignKey:OwnerID"`
 	IsPrivate bool `gorm:"default:false"`
 }
