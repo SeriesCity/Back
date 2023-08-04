@@ -47,6 +47,8 @@ type FilmBase struct {
 	Cover         Photo    `gorm:"embedded"`
 	Trailer       Video    `gorm:"embedded"`
 	Tags          []string `gorm:"type:text[]"`
+	IsPin         bool     `gorm:"default:false"`
+	Priority      int      `gorm:"default:1"`
 }
 
 type IMDB struct {
