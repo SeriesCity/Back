@@ -31,7 +31,6 @@ func RedisInit() *RedisDB {
 
 func NewGormDatabase() *PGRepository {
 	pgSingleton.Do(func() {
-		println("hi")
 		client, _ := GormInit()
 		db = &PGRepository{DB: client}
 	})

@@ -20,7 +20,6 @@ func GormInit() (*gorm.DB, error) {
 	port := os.Getenv("PG_PORT")
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tehran", host, user, password, dbName, port)
-	fmt.Println(dsn)
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
