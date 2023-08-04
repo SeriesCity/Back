@@ -6,6 +6,12 @@ import (
 	"sync"
 )
 
+var db *PGRepository
+var pgSingleton sync.Once
+
+var redisDB *RedisDB
+var redisSingleton sync.Once
+
 type RedisDB struct {
 	Client *redis.Client
 }
@@ -15,17 +21,20 @@ type PGRepository struct {
 }
 
 func RedisInit() *RedisDB {
-	o := sync.Once{}
-	var db *RedisDB
-	o.Do(func() {
-		db = &RedisDB{
+	redisSingleton.Do(func() {
+		redisDB = &RedisDB{
 			Client: createRedisConnection(),
 		}
 	})
-	return db
+	return redisDB
 }
 
 func NewGormDatabase() *PGRepository {
-	db, _ := GormInit()
-	return &PGRepository{DB: db}
+	pgSingleton.Do(func() {
+		println("hi")
+		client, _ := GormInit()
+		db = &PGRepository{DB: client}
+	})
+
+	return db
 }
