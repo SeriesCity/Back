@@ -13,5 +13,7 @@ func main() {
 	controller.RegisterMovieService(e)
 	controller.RegisterSerialService(e)
 	controller.RegisterCategoryService(e)
-	log.Fatal(e.Start(":8000"))
+	log.Fatal(
+		e.Start(":8000"),
+	)
 }

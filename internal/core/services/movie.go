@@ -20,3 +20,7 @@ func NewMovieService() *MovieService {
 func (m *MovieService) GetAllMovies() []entities.Movie {
 	return m.database.GetAllMovies()
 }
+
+func (m *MovieService) GetPinnedMovies() []entities.Movie {
+	return m.database.GetPinnedMovies()
+}
